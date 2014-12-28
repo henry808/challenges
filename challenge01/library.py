@@ -16,12 +16,11 @@ class Book(object):
 
     A class representing books in a Library.
     """
-    def __init__(self, shelf=None, **kwargs):
-        self.title = ''
-        self.shelf = None
+    def __init__(self, title='', shelf=None, **kwargs):
+        self.title = title
+        self.shelf = shelf
         self.attributes = kwargs
         super(Book, self).__init__()
-
 
     def enshelf(self, shelf):
         """Put the book on a shelf
@@ -32,15 +31,24 @@ class Book(object):
             pass
         self.shelf = shelf
 
-
     def unshelf(self):
         """Removes the book from its shelf
         """
         if self.shelf:
             # remove book from shelf
             self.shelf.remove
-            pass        
         self.shelf = None
+
+    def __str__(self):
+        """str representation of Book object
+        """
+        return "Book with title: {}".format(self.title)
+
+    def __repr__(self):
+        """str representation of Book object
+        """
+        return 'Book({})'.format(self.title)
+
 
 class Shelf(object):
     """A Shelf object.
@@ -52,5 +60,18 @@ class Shelf(object):
         super(Shelf, self).__init__()
 
 
+class Library(object):
+    """A Library object.
+
+    A class representing a library containing shelves containing books.
+    """
+    def __init__(self):
+        self.books = []
+        super(Shelf, self).__init__()
+
 if __name__ == '__main__':
-    pass
+    b1 = Book('The Lost')
+    b2 = Book()
+
+    print(b1)
+    print(b2)
