@@ -55,9 +55,21 @@ class Shelf(object):
 
     A class representing shelves containing books in a Library.
     """
-    def __init__(self):
+    def __init__(self, shelf_name=''):
+        self.shelf_name = shelf_name
         self.books = []
         super(Shelf, self).__init__()
+
+    def __str__(self):
+        """str representation of shelfobject
+        """
+        text = "Shelf with name: {} containing books {}"
+        return text.format(self.shelf_name, self.books)
+
+    def __repr__(self):
+        """str representation of Book object
+        """
+        return 'Shelf({})'.format(self.shelf_name)
 
 
 class Library(object):
@@ -70,8 +82,10 @@ class Library(object):
         super(Shelf, self).__init__()
 
 if __name__ == '__main__':
-    b1 = Book('The Lost')
+    b1 = Book('The Spam and Spam')
     b2 = Book()
+    b3 = Book('The Spam')
 
     print(b1)
     print(b2)
+    print(b3)
