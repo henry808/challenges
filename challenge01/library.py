@@ -61,8 +61,8 @@ class Shelf(object):
     def __init__(self, shelf_name='', *args):
         self.shelf_name = shelf_name
         self.books = list(args)
-        if args:
-            self.books 
+        for book in self.books:
+            book.shelf = self
         super(Shelf, self).__init__()
 
     def addbook(self, book):
@@ -80,16 +80,19 @@ class Shelf(object):
     def __str__(self):
         """str representation of Shelf object
         """
-        text = "Shelf with name: {} containing books {}"
+        text = "Shelf with name {} containing books {}"
         return text.format(self.shelf_name, self.books)
 
     def __repr__(self):
         """str representation of Shelf object
         """
-        print(self.books)
-
         books = str(self.books)
-        return 'Shelf(\'{}\', [{}])'.format(self.shelf_name, books)
+        # strip brackets off list
+        books = books[1:-1]
+        # if any books, then need to put a comma before them
+        if books:
+            books = ", {}".format(books)
+        return 'Shelf(\'{}\'{})'.format(self.shelf_name, books)
 
 
 class Library(object):
@@ -97,48 +100,70 @@ class Library(object):
 
     A class representing a library containing shelves containing books.
     """
-    def __init__(self, library_name=''):
+    def __init__(self, library_name='', *args):
         self.library_name = library_name
-        self.shelves = []
+        self.shelves = list(args)
         super(Library, self).__init__()
 
     def __str__(self):
         """str representation of library object
         """
-        text = "Library with name: {} containing shelves {}"
-        return text.format(self.library_name, self.shelf_name)
+        text = "Library with name {} containing shelves {}"
+        return text.format(self.library_name, self.shelves)
 
     def __repr__(self):
-        """str representation of Book object
+        """str representation of library object
         """
-        return 'Library({})'.format(self.library_name)
+        shelves = str(self.shelves)
+        # strip brackets off list
+        shelves = shelves[1:-1]
+        # if any shelves, then need to put a comma before them
+        if shelves:
+            shelves = ", {}".format(shelves)
+        return 'Library(\'{}\'{})'.format(self.library_name, shelves)
+
 
 if __name__ == '__main__':
-    b1 = Book('The Spam and Spam')
-    b2 = Book()
-    b3 = Book('The Spam')
-    b4 = Book('The Eggs')
+    books = [Book('The Truth of Spam'),
+             Book('Of Mice and Spam'),
+             Book('The Spam'),
+             Book('The Eggs'),
+             Book('Tales of Spam')]
 
-    print(b1)
-    print(b2)
-    print(b3)
+    print('Books:')
+    for book in books:
+        print(book)
+    print('\n')
 
-    l = [b1, b2, b3]
+    s1 = Shelf('First', books[0], books[1])
+    s2 = Shelf('Second')
+    books[2].enshelf(s2)
+    books[3].enshelf(s2)
+    s2.addbook(books[4])
+    s3 = Shelf('Empty')
 
-    print(l)
+    print('Shelves:')
+    print(s1)
+    print(s2)
+    print('\n')
 
-    s = Shelf('First Shelf', b1)
+    print('Books on shelves:')
+    for book in books:
+        print("Book {} is on shelf: {}.".format(book.title, book.shelf.shelf_name))
+    print('\n')
 
-    print(s)
+    print('Show repr of Shelves:')
+    print(repr(s1))
+    print(repr(s2))
+    print(repr(s3))
+    print('\n')
 
-    # b1.enshelf(s)
-    # b2.enshelf(s)
-    # b3.enshelf(s)
+    l = Library('Uptown', s1, s2, s3)
 
-    # print(b1.shelf)
-    # print(b2.shelf)
-    # print(b3.shelf)
-    # print(b3.shelf)
-    # print(b4.shelf)
+    print('Show the library:')
+    print(repr(l))
+    print('\n')
 
-    print(repr(s))
+    l2 = Library('Uptown', Shelf('First', Book('The Spam and Spam'), Book('')), Shelf('Second', Book('The Spam'), Book('The Eggs'), Book('Tales of Spam')), Shelf('Empty'))
+
+    print(repr(l2))

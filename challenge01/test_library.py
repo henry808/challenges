@@ -6,8 +6,6 @@ code that tests library_renderer.py module
 can be run with py.test
 """
 
-import cStringIO
-
 import pytest  # used for the exception testing
 
 import library as lb
@@ -128,11 +126,67 @@ def test_shelf_init_booklist():
     b2 = lb.Book('The War and Pieces of Spam')
     b3 = lb.Book('Cheeze and Spam')
     b4 = lb.Book('From Russia with Spam')
-    s1 = lb.Shelf('Books', [b1, b2, b3, b4])
-    compare = "Shelf('Books', [{}, {}, {}, {}])".format(b1, b2, b3, b4)
+    s1 = lb.Shelf('Books', b1, b2, b3, b4)
+    shelf_string = "Shelf('Books', {}, {}, {}, {})"
+    compare = shelf_string.format(repr(b1), repr(b2), repr(b3), repr(b4))
     assert isinstance(s1, lb.Shelf)
     assert repr(s1) == compare
 
+
+def test_shelf_init_booklist_then_add_books():
+    """Test Shelf class constructor
+
+    Test adding a list of books, then adding a couple books with enshelf
+    """
+    b1 = lb.Book('The Trueth Behind Spam')
+    b2 = lb.Book('The War and Pieces of Spam')
+    b3 = lb.Book('Cheeze and Spam')
+    b4 = lb.Book('From Russia with Spam')
+    s1 = lb.Shelf('Books', b1, b2)
+    b3.enshelf(s1)
+    b4.enshelf(s1)
+    shelf_string = "Shelf('Books', {}, {}, {}, {})"
+    compare = shelf_string.format(repr(b1), repr(b2), repr(b3), repr(b4))
+    assert isinstance(s1, lb.Shelf)
+    assert repr(s1) == compare
+
+
+def test_shelf_remove():
+    """Test remeving books from a shelf
+
+    Test adding four books and then removing two of them with remove method
+    """
+    b1 = lb.Book('The Trueth Behind Spam')
+    b2 = lb.Book('The War and Pieces of Spam')
+    b3 = lb.Book('Cheeze and Spam')
+    b4 = lb.Book('From Russia with Spam')
+    s1 = lb.Shelf('Books', b1, b2, b3, b4)
+    s1.remove(b2)
+    s1.remove(b3)
+    shelf_string = "Shelf('Books', {}, {})"
+    compare = shelf_string.format(repr(b1), repr(b4))
+    assert isinstance(s1, lb.Shelf)
+    assert repr(s1) == compare
+
+
+def test_shelf_remove_twice():
+    """Test remeving books from a shelf
+
+    Test adding four books and then removing two of them with remove method
+    """
+    b1 = lb.Book('The Trueth Behind Spam')
+    b2 = lb.Book('The War and Pieces of Spam')
+    b3 = lb.Book('Cheeze and Spam')
+    b4 = lb.Book('From Russia with Spam')
+    s1 = lb.Shelf('Books', b1, b2, b3, b4)
+    s1.remove(b2)
+    s1.remove(b3)
+    with pytest.raises(ValueError):
+        s1.remove(b2)
+    shelf_string = "Shelf('Books', {}, {})"
+    compare = shelf_string.format(repr(b1), repr(b4))
+    assert isinstance(s1, lb.Shelf)
+    assert repr(s1) == compare
 
 
 def test_shelf_for_book_enshelf():
@@ -154,8 +208,8 @@ def test_shelf_for_book_enshelf():
     b4.enshelf(s2)
 
     # make sure books know what shelves they are on.
-    compare1 = "Shelf('Epics', [{}, {}, {}])".format(b1, b2, b3)
-    compare2 = "Shelf('Espionage', [{}])".format(b4)
+    compare1 = "Shelf('Epics', {}, {}, {})".format(repr(b1), repr(b2), repr(b3))
+    compare2 = "Shelf('Espionage', {})".format(repr(b4))
     assert repr(s1) == compare1
     assert repr(s2) == compare2
 
@@ -180,7 +234,7 @@ def test_shelf_for_book_unshelf():
     b3.unshelf()
 
     # make sure shelf has two books left on it.
-    compare = "Shelf('Epics', [{}, {}])".format(b1, b4)
+    compare = "Shelf('Epics', {}, {})".format(repr(b1), repr(b4))
     assert repr(s1) == compare
 
 
@@ -207,10 +261,11 @@ def test_shelves_shelved_book_enshelf():
     b4.enshelf(s2)
 
     # make sure books know they moved to new shelf.
-    compare1 = "Shelf('Old Shelf', [])"
-    compare2 = "Shelf('New Shelf', [{}, {}, {}, {}])".format(b1, b2, b3, b4)
+    compare1 = "Shelf('Old Shelf')"
+    shelf_string = "Shelf('New Shelf', {}, {}, {}, {})"
+    compare2 = shelf_string.format(repr(b1), repr(b2), repr(b3), repr(b4))
     assert repr(s1) == compare1
-    assert repr(s1) == compare2
+    assert repr(s2) == compare2
 
 
     # test str and repr
