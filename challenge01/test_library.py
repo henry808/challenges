@@ -161,8 +161,8 @@ def test_shelf_remove():
     b3 = lb.Book('Cheeze and Spam')
     b4 = lb.Book('From Russia with Spam')
     s1 = lb.Shelf('Books', b1, b2, b3, b4)
-    s1.remove(b2)
-    s1.remove(b3)
+    s1.remove_book(b2)
+    s1.remove_book(b3)
     shelf_string = "Shelf('Books', {}, {})"
     compare = shelf_string.format(repr(b1), repr(b4))
     assert isinstance(s1, lb.Shelf)
@@ -170,19 +170,19 @@ def test_shelf_remove():
 
 
 def test_shelf_remove_twice():
-    """Test remeving books from a shelf
+    """Test removing books from a shelf
 
-    Test adding four books and then removing two of them with remove method
+    Tests removing the same book twice.
     """
     b1 = lb.Book('The Trueth Behind Spam')
     b2 = lb.Book('The War and Pieces of Spam')
     b3 = lb.Book('Cheeze and Spam')
     b4 = lb.Book('From Russia with Spam')
     s1 = lb.Shelf('Books', b1, b2, b3, b4)
-    s1.remove(b2)
-    s1.remove(b3)
+    s1.remove_book(b2)
+    s1.remove_book(b3)
     with pytest.raises(ValueError):
-        s1.remove(b2)
+        s1.remove_book(b2)
     shelf_string = "Shelf('Books', {}, {})"
     compare = shelf_string.format(repr(b1), repr(b4))
     assert isinstance(s1, lb.Shelf)
@@ -208,10 +208,10 @@ def test_shelf_for_book_enshelf():
     b4.enshelf(s2)
 
     # make sure books know what shelves they are on.
-    compare1 = "Shelf('Epics', {}, {}, {})".format(repr(b1), repr(b2), repr(b3))
-    compare2 = "Shelf('Espionage', {})".format(repr(b4))
-    assert repr(s1) == compare1
-    assert repr(s2) == compare2
+    comp1 = "Shelf('Epics', {}, {}, {})".format(repr(b1), repr(b2), repr(b3))
+    comp2 = "Shelf('Espionage', {})".format(repr(b4))
+    assert repr(s1) == comp1
+    assert repr(s2) == comp2
 
 
 def test_shelf_for_book_unshelf():
@@ -289,4 +289,63 @@ def test_library_init():
     assert isinstance(l, lb.Library)
     assert repr(l) == compare
 
-    # test str and repr
+
+def test_library_add_shelf():
+    """Test Library class add_shelf method
+    """
+    b1 = lb.Book('The Trueth Behind Spam')
+    b2 = lb.Book('The War and Pieces of Spam')
+    b3 = lb.Book('Cheeze and Spam')
+    b4 = lb.Book('From Russia with Spam')
+    b5 = lb.Book('Sir Spamalot')
+    s1 = lb.Shelf('Epics', b1, b2, b3)
+    s2 = lb.Shelf('Espionage', b4)
+    s3 = lb.Shelf('Medieval', b5)
+    l1 = lb.Library('Seattle', s1, s2)
+    l1.add_shelf(s3)
+
+    compare = lb.Library('Seattle', s1, s2, s3)
+
+    assert isinstance(l1, lb.Library)
+    assert repr(l1) == repr(compare)
+
+
+def test_library_remove_shelf():
+    """Test Library class remove_shelf method
+    """
+    b1 = lb.Book('The Trueth Behind Spam')
+    b2 = lb.Book('The War and Pieces of Spam')
+    b3 = lb.Book('Cheeze and Spam')
+    b4 = lb.Book('From Russia with Spam')
+    b5 = lb.Book('Sir Spamalot')
+    s1 = lb.Shelf('Epics', b1, b2, b3)
+    s2 = lb.Shelf('Espionage', b4)
+    s3 = lb.Shelf('Medieval', b5)
+    l1 = lb.Library('Seattle', s1, s2, s3)
+    l1.remove_shelf(s3)
+
+    compare = lb.Library('Seattle', s1, s2)
+
+    assert isinstance(l1, lb.Library)
+    assert repr(l1) == repr(compare)
+
+
+def test_library_book_list():
+    """Test Library class book_list method
+
+    Test to make sure book list lists all books in the library.
+    """
+    b1 = lb.Book('The Trueth Behind Spam')
+    b2 = lb.Book('The War and Pieces of Spam')
+    b3 = lb.Book('Cheeze and Spam')
+    b4 = lb.Book('From Russia with Spam')
+    b5 = lb.Book('Sir Spamalot')
+    s1 = lb.Shelf('Epics', b1, b2, b3)
+    s2 = lb.Shelf('Espionage', b4)
+    s3 = lb.Shelf('Medieval', b5)
+    l1 = lb.Library('Seattle', s1, s2, s3)
+
+    all_books = [b1, b2, b3, b4, b5]
+
+    assert isinstance(l1, lb.Library)
+    assert l1.book_list() == all_books

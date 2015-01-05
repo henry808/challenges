@@ -30,7 +30,7 @@ class Book(object):
             self.unshelf()
         if shelf:
             # add book to shelf
-            shelf.addbook(self)
+            shelf.add_book(self)
             pass
         # self.shelf = shelf
 
@@ -39,7 +39,7 @@ class Book(object):
         """
         if self.shelf:
             # remove book from shelf
-            self.shelf.remove(self)
+            self.shelf.remove_book(self)
         self.shelf = None
 
     def __str__(self):
@@ -65,13 +65,13 @@ class Shelf(object):
             book.shelf = self
         super(Shelf, self).__init__()
 
-    def addbook(self, book):
+    def add_book(self, book):
         """Add a book to this shelf
         """
         self.books.append(book)
         book.shelf = self
 
-    def remove(self, book):
+    def remove_book(self, book):
         """Remove a book from this shelf
         """
         self.books.remove(book)
@@ -105,6 +105,25 @@ class Library(object):
         self.library_name = library_name
         self.shelves = list(args)
         super(Library, self).__init__()
+
+    def add_shelf(self, shelf):
+        """Add a shelf from this library
+        """
+        self.shelves.append(shelf)
+
+    def remove_shelf(self, shelf):
+        """Remove a shelf from this library
+        """
+        self.shelves.remove(shelf)
+
+    def book_list(self):
+        """Return a list of all books in this library
+        """
+        books = []
+        for shelf in self.shelves:
+            for book in shelf.books:
+                books.append(book)
+        return books
 
     def __str__(self):
         """str representation of library object
@@ -141,7 +160,7 @@ if __name__ == '__main__':
     s2 = Shelf('Second')
     books[2].enshelf(s2)
     books[3].enshelf(s2)
-    s2.addbook(books[4])
+    s2.add_book(books[4])
     s3 = Shelf('Empty')
 
     print('Shelves:')
@@ -168,6 +187,11 @@ if __name__ == '__main__':
 
     print('Print the library:')
     print(l)
+    print('\n')
+
+    print('List of all books in the library:')
+    for book in l.book_list():
+        print(book)
     print('\n')
 
     l2 = Library('Uptown', Shelf('First', Book('The Spam and Spam'), Book('')),
