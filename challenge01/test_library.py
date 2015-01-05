@@ -268,4 +268,25 @@ def test_shelves_shelved_book_enshelf():
     assert repr(s2) == compare2
 
 
+def test_library_init():
+    """Test Library class constructor
+
+    Test putting shelves with books into a library
+    """
+    l = lb.Library('Uptown',
+                   lb.Shelf('First', lb.Book('The Spam and Spam'),
+                            lb.Book('')),
+                   lb.Shelf('Second', lb.Book('The Spam'),
+                            lb.Book('The Eggs'), lb.Book('Tales of Spam')),
+                   lb.Shelf('Empty'))
+
+    text1 = "Library('Uptown', Shelf('First', Book('The Spam and Spam')"
+    text2 = ", Book('')), Shelf('Second', Book('The Spam'), Book('The Eggs'),"
+    text3 = " Book('Tales of Spam')), Shelf('Empty'))"
+
+    compare = "".join([text1, text2, text3])
+
+    assert isinstance(l, lb.Library)
+    assert repr(l) == compare
+
     # test str and repr

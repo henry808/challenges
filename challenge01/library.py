@@ -45,7 +45,7 @@ class Book(object):
     def __str__(self):
         """str representation of Book object
         """
-        return "Book with title: {}".format(self.title)
+        return "Book: {}".format(self.title)
 
     def __repr__(self):
         """str representation of Book object
@@ -80,8 +80,9 @@ class Shelf(object):
     def __str__(self):
         """str representation of Shelf object
         """
-        text = "Shelf with name {} containing books {}"
-        return text.format(self.shelf_name, self.books)
+        text = "Shelf {} contains {}"
+        books = [str(book) for book in self.books]
+        return text.format(self.shelf_name, books)
 
     def __repr__(self):
         """str representation of Shelf object
@@ -108,8 +109,9 @@ class Library(object):
     def __str__(self):
         """str representation of library object
         """
-        text = "Library with name {} containing shelves {}"
-        return text.format(self.library_name, self.shelves)
+        text = "Library {} contains shelves {}"
+        shelves = [str(shelf) for shelf in self.shelves]
+        return text.format(self.library_name, shelves)
 
     def __repr__(self):
         """str representation of library object
@@ -148,8 +150,9 @@ if __name__ == '__main__':
     print('\n')
 
     print('Books on shelves:')
+    text = "Book {} is on shelf: {}."
     for book in books:
-        print("Book {} is on shelf: {}.".format(book.title, book.shelf.shelf_name))
+        print(text.format(book.title, book.shelf.shelf_name))
     print('\n')
 
     print('Show repr of Shelves:')
@@ -159,11 +162,17 @@ if __name__ == '__main__':
     print('\n')
 
     l = Library('Uptown', s1, s2, s3)
-
     print('Show the library:')
     print(repr(l))
     print('\n')
 
-    l2 = Library('Uptown', Shelf('First', Book('The Spam and Spam'), Book('')), Shelf('Second', Book('The Spam'), Book('The Eggs'), Book('Tales of Spam')), Shelf('Empty'))
+    print('Print the library:')
+    print(l)
+    print('\n')
 
+    l2 = Library('Uptown', Shelf('First', Book('The Spam and Spam'), Book('')),
+                 Shelf('Second', Book('The Spam'), Book('The Eggs'),
+                 Book('Tales of Spam')), Shelf('Empty'))
+
+    print('Set a second library:')
     print(repr(l2))
